@@ -2,7 +2,7 @@
 
 Crate for drawing graphics in `svd` format. It is intended to be simple to use, maintain and extent.
 
-Main focus is on to provide a convenient way to draw common diagrams, like bar charts, stacked bar charts and pie charts. 
+Main focus is on to provide a convenient way to draw common diagrams, like bar charts, stacked bar charts and pie charts.
 
 There are plenty of alternatives for generating diagrams, to name a few with Rust support.
 
