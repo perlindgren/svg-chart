@@ -9,6 +9,15 @@ use std::io::prelude::*;
 use std::path::Path;
 
 impl Tag {
+    /// Mathematical arc, with polar coordinates
+    /// Angles between 0.0 .. 1.0
+    /// SVG uses 0,0 as top left, thus y axis is inverted respective angle
+    /// angle 0.0  -> x + radius, y
+    /// angle 0.25 -> x, y - radius
+    /// angle 0.5  -> x - radius, y
+    /// angle 0.75 -> x, y + radius
+    ///
+    /// Should be called with swipe_dir false (counter clockwise)
     pub fn arc(
         x: u32,
         y: u32,
@@ -55,6 +64,13 @@ impl Tag {
         )
     }
 
+    /// Pie chart, clockwise angles
+    /// Angles between 0.0 .. 1.0
+    /// SVG uses 0,0 as top left, thus y axis is inverted respective angle
+    /// angle 0.0  -> x, y - radius
+    /// angle 0.25 -> x + radius, y
+    /// angle 0.5  -> x, y + radius
+    /// angle 0.75 -> x - radius, y
     pub fn pie(x: u32, y: u32, radius: u32, start_angle: f32, end_angle: f32) -> Self {
         Self::arc(x, y, radius, 0.25 - start_angle, 0.25 - end_angle, true)
     }
@@ -71,7 +87,6 @@ impl Tag {
     where
         T: Display,
     {
-        // <text x="20" y="35" class="small">My</text>
         Tag::new("text")
             .attr("x", x)
             .attr("y", y)

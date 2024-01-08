@@ -30,3 +30,5 @@ The `svg` format captures models in a fairly simple `xml` format. While there ex
 Drawing primitives are found in the `draw.rs` file, which adds `svg-chart` specific functionality.
 
 Based on that, `bar_chart.rs`, `stacked_bar_chart.rs`, and `pie_chart.rs` can be used to generate diagrams accordingly (unit tests covers examples of use).
+
+The `pie` primitive uses clockwise direction starting from top. A mathematical `arc` is also available using polar coordinates, and counter clockwise draw direction in `svg` terminology.
