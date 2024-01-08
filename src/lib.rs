@@ -1,6 +1,6 @@
 // svg-chart
 
-mod bar_chart;
-mod xml;
-mod draw;
-mod common;
+pub mod bar_chart;
+pub mod common;
+pub mod draw;
+pub mod xml;

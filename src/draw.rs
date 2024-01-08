@@ -8,20 +8,15 @@ use std::io;
 use std::io::prelude::*;
 use std::path::Path;
 
-// mod mono {
-//     use std::sync::atomic::{AtomicU32, Ordering};
-//     // start from 2, ids 0 and 1 reserved
-//     static mut MONO: AtomicU32 = AtomicU32::new(2);
-
-//     pub(crate) fn get_new() -> u32 {
-//         let mono = unsafe { MONO.load(Ordering::SeqCst) };
-//         unsafe { MONO.store(mono + 1, Ordering::SeqCst) }
-//         mono
-//     }
-// }
-
 impl Tag {
-    pub fn arc(x: u32, y: u32, radius: u32, start_angle: f32, end_angle: f32) -> Self {
+    pub fn arc(
+        x: u32,
+        y: u32,
+        radius: u32,
+        start_angle: f32,
+        end_angle: f32,
+        swipe_dir: bool,
+    ) -> Self {
         let x = x as f32;
         let y = y as f32;
         let radius = radius as f32;
@@ -31,23 +26,11 @@ impl Tag {
         let end_sin = (end_angle * 2.0 * PI).sin();
         let end_cos = (end_angle * 2.0 * PI).cos();
 
-        println!("start sin {}", start_sin);
-        println!("start cos {}", start_cos);
-
-        println!("end sin {}", end_sin);
-        println!("end cos {}", end_cos);
-
         let start_x = x + (start_cos * radius);
         let start_y = y - (start_sin * radius);
 
         let end_x = x + (end_cos * radius);
         let end_y = y - (end_sin * radius);
-
-        println!("start_x {}", start_x);
-        println!("start_y {}", start_y);
-
-        println!("end_x {}", end_x);
-        println!("end_y {}", end_y);
 
         Tag::new("path").attr(
             "d",
@@ -58,14 +41,22 @@ impl Tag {
                 radius,
                 radius,
                 0,
-                if end_angle - start_angle > 0.5 { 1 } else { 0 },
-                0,
+                if (end_angle - start_angle).abs() > 0.5 {
+                    1
+                } else {
+                    0
+                },
+                swipe_dir as u32,
                 end_x,
                 end_y,
                 x,
                 y
             ),
         )
+    }
+
+    pub fn pie(x: u32, y: u32, radius: u32, start_angle: f32, end_angle: f32) -> Self {
+        Self::arc(x, y, radius, 0.25 - start_angle, 0.25 - end_angle, true)
     }
 
     pub fn rect(x: u32, y: u32, width: u32, height: u32) -> Self {
@@ -121,13 +112,6 @@ impl Tag {
 mod test {
     use super::*;
 
-    // #[test]
-    // fn test_mono() {
-    //     let m1 = mono::get_new();
-    //     let m2 = mono::get_new();
-    //     assert!(m2 > m1);
-    // }
-
     fn test<T>(inner: Vec<Tag>, path: T)
     where
         T: AsRef<Path>,
@@ -161,10 +145,20 @@ mod test {
     #[test]
     fn test_arc() {
         test(
-            vec![Tag::arc(100, 100, 100, 0.25, 0.950)
+            vec![Tag::arc(100, 100, 100, 0.25, 0.950, false)
                 .attr("stroke", "white")
                 .attr("fill", "green")],
-            "xml/my_arc.svg",
+            "xml/arc.svg",
+        )
+    }
+
+    #[test]
+    fn test_pie() {
+        test(
+            vec![Tag::pie(100, 100, 100, 0.20, 0.90)
+                .attr("stroke", "white")
+                .attr("fill", "green")],
+            "xml/pie.svg",
         )
     }
 
@@ -194,20 +188,6 @@ mod test {
     }
 
     // #[test]
-    // fn test_pie() {
-    //     let x = 100;
-    //     let y = 100;
-    //     let radius = 100;
-    //     let io = Tag::draw(vec![
-    //         Tag::pie(x, y, radius, radius, 0.0, 0.25),
-    //         Tag::pie(x, y, radius, radius, 0.5, 0.75),
-    //     ]);
-    //     println!("{}", io);
-    //     io.save(&PathBuf::from_str("xml/pie_chart.drawio").unwrap())
-    //         .unwrap();
-    // }
-
-    // #[test]
     // fn test_pie_color() {
     //     let x = 100;
     //     let y = 100;
@@ -220,14 +200,5 @@ mod test {
     //     println!("{}", io);
     //     io.save(&PathBuf::from_str("xml/pie_chart_color.drawio").unwrap())
     //         .unwrap();
-    // }
-
-    // #[test]
-    // fn test_srp() {
-    //     use srp::common::*;
-    //     let tasks = srp::task_sets::task_set1();
-    //     tasks.store(&PathBuf::from("task_sets/task_set1.json")).ok();
-    //     let tasks_loaded = Tasks::load(&PathBuf::from("task_sets/task_set1.json")).unwrap();
-    //     assert_eq!(tasks, tasks_loaded);
     // }
 }
