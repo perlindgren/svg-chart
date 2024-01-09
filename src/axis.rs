@@ -13,6 +13,8 @@ where
     height: u32,
     x_margin: u32,
     y_margin: u32,
+    y_min: u32,
+    y_max: u32,
     labels: Vec<T>,
 }
 
@@ -27,6 +29,8 @@ where
         height: u32,
         x_margin: u32,
         y_margin: u32,
+        y_min: u32,
+        y_max: u32,
         labels: Vec<T>,
     ) -> Self {
         Axis {
@@ -36,6 +40,8 @@ where
             height,
             x_margin,
             y_margin,
+            y_min,
+            y_max,
             labels,
         }
     }
@@ -47,6 +53,8 @@ where
         let width = self.width;
         let x_margin = self.x_margin;
         let y_margin = self.y_margin;
+        let y_min = self.y_min;
+        let y_max: u32 = self.y_max;
 
         let labels = &self.labels;
 
@@ -86,6 +94,10 @@ where
                 .attr("text-anchor", "middle"),
             );
         }
+
+        // scaling
+        tag.inner_ref(Tag::text(y_min, x, y + height - y_margin).attr("fill", "white"));
+        tag.inner_ref(Tag::text(y_max, x, y).attr("fill", "white"));
         tag
     }
 }
@@ -98,7 +110,17 @@ mod test {
 
     #[test]
     fn axis() {
-        let axis = Axis::new(100, 50, 200, 100, 50, 20, vec!["T1", "Task2", "Task3"]);
+        let axis = Axis::new(
+            100,
+            50,
+            200,
+            100,
+            50,
+            20,
+            0,
+            100,
+            vec!["T1", "Task2", "Task3"],
+        );
         let svg = axis.build();
         test(vec![svg], "xml/axis.svg")
     }
@@ -107,7 +129,9 @@ mod test {
     fn axis_bar_chart() {
         let v = [20, 40, 30];
         let c = ["green", "red", "blue"];
-        let t = ["High", "Mid", "Idle"];
+        let t = ["Hi", "Mid", "Low"];
+
+        let y_max = v.into_iter().max().unwrap();
 
         let vct: Vec<(u32, _, _)> = v
             .iter()
@@ -119,7 +143,7 @@ mod test {
         test(
             vec![
                 BarChart::new(100, 100, 200, 80, vct).build(),
-                Axis::new(50, 100, 250, 100, 50, 20, t.into()).build(),
+                Axis::new(50, 100, 250, 100, 50, 20, 0, y_max, t.into()).build(),
             ],
             "xml/bar_chart_axis.svg",
         )

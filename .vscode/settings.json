@@ -1,3 +1,10 @@
 {
-  "cSpell.ignoreWords": ["Graphviz", "consts", "dasharray", "plotlib", "plotly"]
+  "cSpell.ignoreWords": [
+    "Graphviz",
+    "consts",
+    "dasharray",
+    "plotlib",
+    "plotly"
+  ],
+  "svg.preview.background": "editor"
 }
