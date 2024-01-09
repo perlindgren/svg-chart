@@ -9,6 +9,10 @@ use std::io::prelude::*;
 use std::path::Path;
 
 impl Tag {
+    /// create a hover text
+    pub fn hover(hover: &str) -> Self {
+        Tag::new("title").inner(Tag::raw(hover))
+    }
     /// Mathematical arc, with polar coordinates
     /// Angles between 0.0 .. 1.0
     /// SVG uses 0,0 as top left, thus y axis is inverted respective angle
@@ -124,10 +128,10 @@ impl Tag {
 }
 
 #[cfg(test)]
-mod test {
+pub mod test {
     use super::*;
 
-    fn test<T>(inner: Vec<Tag>, path: T)
+    pub fn test<T>(inner: Vec<Tag>, path: T)
     where
         T: AsRef<Path>,
     {
@@ -146,6 +150,16 @@ mod test {
         test(
             vec![Tag::text("hello world", 20, 20).attr("fill", "white")],
             "xml/text.svg",
+        );
+    }
+
+    #[test]
+    fn test_hover() {
+        test(
+            vec![Tag::rect(20, 20, 100, 100)
+                .attr("fill", "white")
+                .inner(Tag::hover("hello world"))],
+            "xml/hover.svg",
         );
     }
 

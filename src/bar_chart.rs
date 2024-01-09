@@ -1,56 +1,96 @@
-// // bar chart
-// use crate::common::*;
-// use svg::{
-//     node::element::{path::Data, Path},
-//     Document,
-// };
+// bar chart
+use crate::{draw::*, xml::*};
+use std::fmt::Display;
 
-// #[derive(Default)]
-// pub struct BarChart {
-//     bar_values: Vec<f32>,
-// }
+type Val<T1, T2> = (u32, T1, T2);
+#[derive(Default)]
+pub struct BarChart<T1, T2>
+where
+    T1: Display,
+    T2: Display,
+{
+    x: u32,
+    y: u32,
+    width: u32,
+    height: u32,
+    bar_values: Vec<Val<T1, T2>>,
+}
 
-// impl BarChart {
-//     pub fn new() -> BarChart {
-//         BarChart::default()
-//     }
+impl<T1, T2> BarChart<T1, T2>
+where
+    T1: Display,
+    T2: Display,
+{
+    pub fn new(
+        x: u32,
+        y: u32,
+        width: u32,
+        height: u32,
+        bar_values: Vec<Val<T1, T2>>,
+    ) -> BarChart<T1, T2> {
+        BarChart {
+            x,
+            y,
+            width,
+            height,
+            bar_values,
+        }
+    }
 
-//     pub fn bar_values(mut self, bar_values: Vec<f32>) -> BarChart {
-//         self.bar_values = bar_values;
-//         self
-//     }
-// }
+    pub fn group(&self) -> Tag {
+        let scale_x_bar = self.width as f32 / (self.bar_values.len()) as f32;
+        let max_value = self.bar_values.iter().map(|(v, _, _)| *v).max().unwrap();
+        let scale_y_bar = self.height as f32 / max_value as f32;
 
-// impl From<BarChart> for Document {
-//     fn from(bar_chart: BarChart) -> Self {
-//         let data1 = rect(30, 10, 10, 30);
-//         let data2 = rect(10, 10, 10, 30);
+        println!("scale_x_bar {}", scale_x_bar);
+        println!("scale_y_bar {}", scale_y_bar);
 
-//         let path1 = Path::new()
-//             .set("fill", "none")
-//             .set("stroke", "black")
-//             .set("stroke-width", 3)
-//             .set("d", data1);
+        let mut tag = Tag::new("g"); // a group
+        tag.inner_ref(
+            Tag::rect(self.x, self.y, self.width, self.height)
+                .attr("fill", "transparent")
+                .attr("stroke", "white"),
+        );
+        for (i, (v, c, t)) in self.bar_values.iter().enumerate() {
+            println!("{} {} {} {}", i, v, c, t);
+            tag.inner_ref(
+                Tag::rect(
+                    self.x + ((i as f32) * scale_x_bar) as u32,
+                    self.y + self.height - *v,
+                    scale_x_bar as u32,
+                    *v,
+                )
+                .attr("fill", c)
+                .inner(Tag::hover(&t.to_string())),
+            );
+        }
+        tag
+    }
+}
 
-//         let path2 = Path::new()
-//             .set("fill", "#800000")
-//             .set("stroke", "black")
-//             .set("stroke-width", 1.5)
-//             .set("d", data2);
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::draw::test::test;
 
-//         Document::new()
-//             .set("viewBox", (0, 0, 70, 70))
-//             .add(path1)
-//             .add(path2)
-//     }
-// }
+    #[test]
+    fn bar() {
+        test(
+            vec![Tag::rect(20, 20, 50, 40).attr("fill", "green")],
+            "xml/bar.svg",
+        );
+    }
 
-// #[cfg(test)]
-// mod test {
-//     use super::*;
-//     #[test]
-//     fn bar_chart() {
-//         let document: Document = BarChart::new().into();
-//         svg::save("image.svg", &document).unwrap();
-//     }
-// }
+    #[test]
+    fn bar_chart() {
+        let bar_chart = BarChart::new(
+            100,
+            50,
+            200,
+            100,
+            vec![(20, "yellow", "Task1"), (40, "green", "Task2")],
+        );
+        let group = bar_chart.group();
+        test(vec![group], "xml/bars.svg")
+    }
+}
