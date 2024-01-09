@@ -1,5 +1,5 @@
 // bar chart
-use crate::{draw::*, xml::*};
+use crate::xml::*;
 use std::fmt::Display;
 
 type Val<T1, T2> = (u32, T1, T2);
