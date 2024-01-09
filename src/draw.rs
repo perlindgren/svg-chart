@@ -135,7 +135,7 @@ pub mod test {
     where
         T: AsRef<Path>,
     {
-        let svg = Tag::document(inner, 320, 200);
+        let svg = Tag::document(inner, 640, 480);
         println!("{}", svg);
         svg.save(&path).unwrap();
     }

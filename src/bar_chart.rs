@@ -46,11 +46,12 @@ where
         println!("scale_y_bar {}", scale_y_bar);
 
         let mut tag = Tag::new("g"); // a group
-        tag.inner_ref(
-            Tag::rect(self.x, self.y, self.width, self.height)
-                .attr("fill", "transparent")
-                .attr("stroke", "white"),
-        );
+                                     // tag.inner_ref(
+                                     //     Tag::rect(self.x, self.y, self.width, self.height)
+                                     //         .attr("fill", "transparent")
+                                     //         .attr("stroke", "white")
+                                     //         .attr("stroke-dasharray", 4),
+                                     // );
         for (i, (v, c, t)) in self.bar_values.iter().enumerate() {
             println!("{} {} {} {}", i, v, c, t);
             tag.inner_ref(
