@@ -37,7 +37,7 @@ where
         }
     }
 
-    pub fn group(&self) -> Tag {
+    pub fn build(&self) -> Tag {
         let scale_x_bar = self.width as f32 / (self.bar_values.len()) as f32;
         let max_value = self.bar_values.iter().map(|(v, _, _)| *v).max().unwrap();
         let scale_y_bar = self.height as f32 / max_value as f32;
@@ -90,7 +90,7 @@ mod test {
             100,
             vec![(20, "yellow", "Task1"), (40, "green", "Task2")],
         );
-        let group = bar_chart.group();
+        let group = bar_chart.build();
         test(vec![group], "xml/bars.svg")
     }
 }

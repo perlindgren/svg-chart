@@ -32,7 +32,7 @@ impl Tag {
     ) -> Self {
         let x = x as f32;
         let y = y as f32;
-        let radius = radius as f32;
+        let radius = radius as f32 - 1.0;
         let start_sin = (start_angle * 2.0 * PI).sin();
         let start_cos = (start_angle * 2.0 * PI).cos();
 
@@ -184,9 +184,20 @@ pub mod test {
     #[test]
     fn test_pie() {
         test(
-            vec![Tag::pie(100, 100, 100, 0.20, 0.90)
-                .attr("stroke", "white")
-                .attr("fill", "green")],
+            vec![
+                Tag::pie(100, 100, 100, 0.0, 0.25)
+                    .attr("stroke", "white")
+                    .attr("fill", "green")
+                    .inner(Tag::hover("Task 1")),
+                Tag::pie(100, 100, 100, 0.25, 0.35)
+                    .attr("stroke", "white")
+                    .attr("fill", "blue")
+                    .inner(Tag::hover("Task 2")),
+                Tag::pie(100, 100, 100, 0.35, 0.65)
+                    .attr("stroke", "white")
+                    .attr("fill", "red")
+                    .inner(Tag::hover("Task 3")),
+            ],
             "xml/pie.svg",
         )
     }
@@ -215,19 +226,4 @@ pub mod test {
             "xml/bar_chart.svg",
         )
     }
-
-    // #[test]
-    // fn test_pie_color() {
-    //     let x = 100;
-    //     let y = 100;
-    //     let radius = 100;
-    //     let io = Tag::draw(vec![
-    //         Tag::pie(x, y, radius, radius, 0.0, 0.25).style("fillColor", "#800000"),
-    //         Tag::pie(x, y, radius, radius, 0.25, 0.45).style("fillColor", "#000080"),
-    //         Tag::pie(x, y, radius, radius, 0.45, 0.87).style("fillColor", "#008000"),
-    //     ]);
-    //     println!("{}", io);
-    //     io.save(&PathBuf::from_str("xml/pie_chart_color.drawio").unwrap())
-    //         .unwrap();
-    // }
 }
