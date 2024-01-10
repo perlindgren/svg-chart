@@ -1,26 +1,32 @@
-// // bar chart
-// use svg::{
-//     node::element::{path::Data, Path},
-//     Document,
-// };
+// common
+use crate::xml::Tag;
+use std::fmt::Display;
 
-// pub fn plepps() {}
+pub trait Chart {
+    /// get x and y position
+    fn get_pos(&self) -> (u32, u32);
 
-// pub fn rect(x: i32, y: i32, width: i32, height: i32) -> Data {
-//     Data::new()
-//         .move_to((x, y))
-//         .line_by((width, 0)) // right
-//         .line_by((0, height))
-//         .line_by((-width, 0))
-//         .close()
-// }
-// #[cfg(test)]
-// mod test {
-//     use super::*;
-//     // #[test]
-//     //     fn bar_chart() {
-//     //         let document: Document = BarChart::new().into();
-//     //         svg::save("image.svg", &document).unwrap();
-//     //     }
-//     // }
-// }
+    /// set x and y position
+    fn set_pos(&mut self, x: u32, y: u32);
+
+    /// get width and height
+    fn get_size(&self) -> (u32, u32);
+
+    /// set the with and height
+    fn set_size(&mut self, width: u32, height: u32);
+
+    /// the builder
+    fn build_trait(self) -> Tag;
+}
+
+pub trait Data {
+    /// get the labels
+    fn get_labels(&self) -> Vec<impl Display>;
+    /// get the colors
+    fn get_colors(&self) -> Vec<impl Display>;
+}
+
+pub trait Values {
+    /// get the values
+    fn get_values(&self) -> Vec<u32>;
+}

@@ -1,9 +1,10 @@
 // svg-chart
 
-pub mod bar_chart;
-// pub mod common;
+pub mod axis;
+pub mod bar;
+pub mod charts;
+pub mod common;
 pub mod draw;
 pub mod legend;
+pub mod pie_chart;
 pub mod xml;
-pub mod axis;
-pub mod charts;

@@ -1,10 +1,13 @@
 // bar chart
-use crate::xml::*;
+use crate::{
+    common::{Chart, Data, Values},
+    xml::*,
+};
 use std::fmt::Display;
 
 type Val<T1, T2> = (u32, T1, T2);
 #[derive(Default)]
-pub struct BarChart<T1, T2>
+pub struct Bar<T1, T2>
 where
     T1: Display,
     T2: Display,
@@ -16,7 +19,7 @@ where
     bar_values: Vec<Val<T1, T2>>,
 }
 
-impl<T1, T2> BarChart<T1, T2>
+impl<T1, T2> Bar<T1, T2>
 where
     T1: Display,
     T2: Display,
@@ -27,8 +30,8 @@ where
         width: u32,
         height: u32,
         bar_values: Vec<Val<T1, T2>>,
-    ) -> BarChart<T1, T2> {
-        BarChart {
+    ) -> Bar<T1, T2> {
+        Bar {
             x,
             y,
             width,
@@ -37,7 +40,7 @@ where
         }
     }
 
-    pub fn build(&self) -> Tag {
+    pub fn build(self) -> Tag {
         let x = self.x;
         let y = self.y;
         let width = self.width;
@@ -76,22 +79,67 @@ where
     }
 }
 
+impl<T1, T2> Chart for Bar<T1, T2>
+where
+    T1: Display,
+    T2: Display + Clone,
+{
+    fn get_pos(&self) -> (u32, u32) {
+        (self.x, self.y)
+    }
+
+    fn set_pos(&mut self, x: u32, y: u32) {
+        self.x = x;
+        self.y = y;
+    }
+
+    fn get_size(&self) -> (u32, u32) {
+        (self.height, self.width)
+    }
+
+    fn set_size(&mut self, width: u32, height: u32) {
+        self.width = width;
+        self.height = height;
+    }
+
+    fn build_trait(self) -> Tag {
+        self.build()
+    }
+}
+
+impl<T1, T2> Data for Bar<T1, T2>
+where
+    T1: Display,
+    T2: Display,
+{
+    ///
+    fn get_labels(&self) -> Vec<impl Display> {
+        self.bar_values.iter().map(|(_v, _c, t)| t).collect()
+    }
+    ///
+    fn get_colors(&self) -> Vec<impl Display> {
+        self.bar_values.iter().map(|(_v, c, _t)| c).collect()
+    }
+}
+
+impl<T1, T2> Values for Bar<T1, T2>
+where
+    T1: Display,
+    T2: Display,
+{
+    fn get_values(&self) -> Vec<u32> {
+        self.bar_values.iter().map(|(v, _c, _t)| *v).collect()
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
     use crate::draw::test::test;
 
     #[test]
-    fn bar() {
-        test(
-            vec![Tag::rect(20, 20, 50, 40).attr("fill", "green")],
-            "xml/bar.svg",
-        );
-    }
-
-    #[test]
     fn bar_chart() {
-        let bar_chart = BarChart::new(
+        let bar_chart = Bar::new(
             100,
             50,
             200,
