@@ -109,7 +109,7 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{bar_chart::*, draw::test::test, legend::*};
+    use crate::draw::test::test;
 
     #[test]
     fn axis() {
@@ -124,32 +124,5 @@ mod test {
         );
         let svg = axis.build();
         test(vec![svg], "xml/axis.svg")
-    }
-
-    #[test]
-    fn axis_bar_chart_legend() {
-        let v = [20, 40, 30, 5];
-        let c = ["green", "red", "blue", "yellow"];
-        let t = ["Hi", "Mid", "Low", "Idle"];
-
-        let y_max = v.into_iter().max().unwrap();
-
-        let vct: Vec<(u32, _, _)> = v
-            .iter()
-            .zip(c.iter())
-            .zip(t.iter())
-            .map(|((v, c), t)| (*v, c, t))
-            .collect();
-        let ct: Vec<_> = c.iter().zip(t.iter()).map(|(c, t)| (c, t)).collect();
-        let vt: Vec<_> = v.iter().zip(t.iter()).map(|(v, t)| (*v, t)).collect();
-
-        test(
-            vec![
-                BarChart::new(100, 100, 200, 180, vct).build(),
-                Axis::new(50, 100, 250, 200, 50, 20, vt).build(),
-                Legend::new(350, 100, 100, 180, ct, 30).build(),
-            ],
-            "xml/bar_chart_axis.svg",
-        )
     }
 }

@@ -1,6 +1,6 @@
 // charts
 use crate::{axis::*, bar_chart::*, legend::*, xml::*};
-use std::{alloc::LayoutError, fmt::Display};
+use std::fmt::Display;
 
 type Val<T1, T2> = (u32, T1, T2);
 
@@ -13,7 +13,7 @@ where
     x: u32,
     y: u32,
     width_bars: u32,
-    width_legend: u32,
+
     height_bars: u32,
     bars: Vec<Val<T1, T2>>,
 }
@@ -23,30 +23,30 @@ where
     T1: Display + Clone,
     T2: Display + Clone,
 {
-    fn new(bars: Vec<Val<T1, T2>>) -> Self {
+    pub fn new(bars: Vec<Val<T1, T2>>) -> Self {
         Bars {
             x: 0,
             y: 0,
             width_bars: 300,
             height_bars: 200,
-            width_legend: 100,
+
             bars,
         }
     }
 
-    fn build(&self) -> Tag {
+    pub fn build(&self) -> Tag {
         let x = self.x;
         let y = self.y;
         let width_bars = self.width_bars;
         let height_bars = self.height_bars;
-        let width_legend = self.width_legend;
+
         let label_margin = 20;
         let bars = self.bars.clone();
 
         let axis_margin = 50;
 
-        let vt: Vec<(u32, _)> = bars.iter().map(|(v, c, t)| (*v, t)).collect();
-        let ct: Vec<_> = bars.iter().map(|(v, c, t)| (c, t)).collect();
+        let vt: Vec<(u32, _)> = bars.iter().map(|(v, _c, t)| (*v, t)).collect();
+        let ct: Vec<_> = bars.iter().map(|(_v, c, t)| (c, t)).collect();
 
         let mut tag = Tag::new("g");
         // bar_chart
@@ -78,8 +78,6 @@ where
             Legend::new(
                 x + axis_margin + width_bars + label_margin,
                 y + label_margin,
-                width_legend,
-                height_bars,
                 ct,
                 20,
             )

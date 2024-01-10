@@ -12,8 +12,7 @@ where
 {
     x: u32,
     y: u32,
-    width: u32,
-    height: u32,
+
     legend: Vec<Val<T1, T2>>,
     legend_height: u32,
 }
@@ -23,19 +22,11 @@ where
     T1: Display,
     T2: Display,
 {
-    pub fn new(
-        x: u32,
-        y: u32,
-        width: u32,
-        height: u32,
-        legend: Vec<Val<T1, T2>>,
-        legend_height: u32,
-    ) -> Self {
+    pub fn new(x: u32, y: u32, legend: Vec<Val<T1, T2>>, legend_height: u32) -> Self {
         Legend {
             x,
             y,
-            width,
-            height,
+
             legend,
             legend_height,
         }
@@ -80,14 +71,7 @@ mod test {
 
     #[test]
     fn legend() {
-        let legend = Legend::new(
-            100,
-            50,
-            200,
-            100,
-            vec![("yellow", "Task1"), ("green", "Task2")],
-            20,
-        );
+        let legend = Legend::new(100, 50, vec![("yellow", "Task1"), ("green", "Task2")], 20);
         let svg = legend.build();
         test(vec![svg], "xml/legend.svg")
     }

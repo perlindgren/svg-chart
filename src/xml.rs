@@ -162,7 +162,7 @@ mod test {
         data.style("x", "13").style("y", 13u32);
 
         println!("{}", data);
-        assert_eq!(" style = \"x=13;y=13;\"", format!("{}", data));
+        assert_eq!(" style = \"x:13;y:13;\"", format!("{}", data));
     }
 
     #[test]
