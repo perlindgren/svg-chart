@@ -108,7 +108,8 @@ impl Tag {
     pub fn document(inner: Vec<Tag>, width: u32, height: u32) -> Self {
         let mut root = Tag::new("svg")
             .attr("viewBox ", format!("0 0 {} {}", width, height))
-            .attr("xmlns", "http://www.w3.org/2000/svg");
+            .attr("xmlns", "http://www.w3.org/2000/svg")
+            .style("background-color", "black");
 
         for e in inner {
             root.inner_ref(e);
@@ -141,8 +142,11 @@ pub mod test {
     }
 
     #[test]
-    fn test_rect() {
-        test(vec![Tag::rect(20, 20, 50, 40)], "xml/rectangle.svg")
+    fn test_rectangle() {
+        test(
+            vec![Tag::rect(20, 20, 50, 40).attr("fill", "white")],
+            "xml/rectangle.svg",
+        )
     }
 
     #[test]

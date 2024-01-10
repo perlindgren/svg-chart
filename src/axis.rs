@@ -96,8 +96,16 @@ where
         }
 
         // scaling
-        tag.inner_ref(Tag::text(y_min, x, y + height - y_margin).attr("fill", "white"));
-        tag.inner_ref(Tag::text(y_max, x, y).attr("fill", "white"));
+        tag.inner_ref(
+            Tag::text(y_min, x + x_margin - 5, y + height - y_margin)
+                .attr("fill", "white")
+                .attr("text-anchor", "end"),
+        );
+        tag.inner_ref(
+            Tag::text(y_max, x + x_margin - 5, y)
+                .attr("fill", "white")
+                .attr("text-anchor", "end"),
+        );
         tag
     }
 }
@@ -105,8 +113,7 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::bar_chart::*;
-    use crate::draw::test::test;
+    use crate::{bar_chart::*, draw::test::test, legend::*};
 
     #[test]
     fn axis() {
@@ -126,10 +133,10 @@ mod test {
     }
 
     #[test]
-    fn axis_bar_chart() {
-        let v = [20, 40, 30];
-        let c = ["green", "red", "blue"];
-        let t = ["Hi", "Mid", "Low"];
+    fn axis_bar_chart_legend() {
+        let v = [20, 40, 30, 5];
+        let c = ["green", "red", "blue", "yellow"];
+        let t = ["Hi", "Mid", "Low", "Idle"];
 
         let y_max = v.into_iter().max().unwrap();
 
@@ -139,11 +146,13 @@ mod test {
             .zip(t.iter())
             .map(|((v, c), t)| (*v, c, t))
             .collect();
+        let ct: Vec<(_)> = c.iter().zip(t.iter()).map(|(c, t)| (c, t)).collect();
 
         test(
             vec![
-                BarChart::new(100, 100, 200, 80, vct).build(),
-                Axis::new(50, 100, 250, 100, 50, 20, 0, y_max, t.into()).build(),
+                BarChart::new(100, 100, 200, 180, vct).build(),
+                Axis::new(50, 100, 250, 200, 50, 20, 0, y_max, t.into()).build(),
+                Legend::new(350, 100, 100, 180, ct, 30).build(),
             ],
             "xml/bar_chart_axis.svg",
         )

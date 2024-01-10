@@ -69,7 +69,7 @@ where
                     v_scale,
                 )
                 .attr("fill", c)
-                .inner(Tag::hover(&t.to_string())),
+                .inner(Tag::hover(&format!("{}: {}", t, v))),
             );
         }
         tag

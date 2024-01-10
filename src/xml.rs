@@ -109,7 +109,7 @@ impl fmt::Display for Data {
                 f,
                 " style = \"{}\"",
                 self.style.iter().fold(String::new(), |mut output, (k, v)| {
-                    let _ = write!(output, "{}={};", k, v);
+                    let _ = write!(output, "{}:{};", k, v);
                     output
                 })
             )?;

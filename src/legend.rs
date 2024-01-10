@@ -43,11 +43,12 @@ where
 
     pub fn build(&self) -> Tag {
         let mut tag = Tag::new("g"); // a group
-        tag.inner_ref(
-            Tag::rect(self.x, self.y, self.width, self.height)
-                .attr("fill", "transparent")
-                .attr("stroke", "white"),
-        );
+
+        // tag.inner_ref(
+        //     Tag::rect(self.x, self.y, self.width, self.height)
+        //         .attr("fill", "transparent")
+        //         .attr("stroke", "white"),
+        // );
         for (i, (c, t)) in self.legend.iter().enumerate() {
             println!("{} {} {}", i, c, t);
             tag.inner_ref(
