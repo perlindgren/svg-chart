@@ -2,6 +2,8 @@
 use crate::xml::*;
 use std::fmt::Display;
 
+type Val<T> = (u32, T);
+
 #[derive(Default)]
 pub struct Axis<T>
 where
@@ -13,15 +15,14 @@ where
     height: u32,
     x_margin: u32,
     y_margin: u32,
-    y_min: u32,
-    y_max: u32,
-    labels: Vec<T>,
+    labels: Vec<Val<T>>,
 }
 
 impl<T> Axis<T>
 where
     T: Display + Copy,
 {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         x: u32,
         y: u32,
@@ -29,9 +30,7 @@ where
         height: u32,
         x_margin: u32,
         y_margin: u32,
-        y_min: u32,
-        y_max: u32,
-        labels: Vec<T>,
+        labels: Vec<Val<T>>,
     ) -> Self {
         Axis {
             x,
@@ -40,8 +39,6 @@ where
             height,
             x_margin,
             y_margin,
-            y_min,
-            y_max,
             labels,
         }
     }
@@ -53,10 +50,9 @@ where
         let width = self.width;
         let x_margin = self.x_margin;
         let y_margin = self.y_margin;
-        let y_min = self.y_min;
-        let y_max: u32 = self.y_max;
-
         let labels = &self.labels;
+
+        let y_max = labels.iter().map(|(v, _)| *v).max().unwrap();
 
         let x_scale = (width - x_margin) as f32 / (labels.len() as f32);
 
@@ -83,7 +79,7 @@ where
             )
             .attr("stroke", "white"),
         );
-        for (i, t) in labels.iter().enumerate() {
+        for (i, (_, t)) in labels.iter().enumerate() {
             tag.inner_ref(
                 Tag::text(
                     t,
@@ -97,7 +93,7 @@ where
 
         // scaling
         tag.inner_ref(
-            Tag::text(y_min, x + x_margin - 5, y + height - y_margin)
+            Tag::text(0, x + x_margin - 5, y + height - y_margin)
                 .attr("fill", "white")
                 .attr("text-anchor", "end"),
         );
@@ -124,9 +120,7 @@ mod test {
             100,
             50,
             20,
-            0,
-            100,
-            vec!["T1", "Task2", "Task3"],
+            vec![(10, "T1"), (20, "Task2"), (30, "Task3")],
         );
         let svg = axis.build();
         test(vec![svg], "xml/axis.svg")
@@ -146,12 +140,13 @@ mod test {
             .zip(t.iter())
             .map(|((v, c), t)| (*v, c, t))
             .collect();
-        let ct: Vec<(_)> = c.iter().zip(t.iter()).map(|(c, t)| (c, t)).collect();
+        let ct: Vec<_> = c.iter().zip(t.iter()).map(|(c, t)| (c, t)).collect();
+        let vt: Vec<_> = v.iter().zip(t.iter()).map(|(v, t)| (*v, t)).collect();
 
         test(
             vec![
                 BarChart::new(100, 100, 200, 180, vct).build(),
-                Axis::new(50, 100, 250, 200, 50, 20, 0, y_max, t.into()).build(),
+                Axis::new(50, 100, 250, 200, 50, 20, vt).build(),
                 Legend::new(350, 100, 100, 180, ct, 30).build(),
             ],
             "xml/bar_chart_axis.svg",

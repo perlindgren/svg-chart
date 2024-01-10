@@ -6,3 +6,4 @@ pub mod draw;
 pub mod legend;
 pub mod xml;
 pub mod axis;
+pub mod charts;
