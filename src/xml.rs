@@ -1,7 +1,7 @@
 // XML data structures
-// use std::convert::Into;
+
 use std::fmt::Display;
-// use std::string::ToString;
+
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct Data {
     pub(crate) attributes: Vec<(String, String)>,

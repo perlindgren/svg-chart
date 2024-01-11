@@ -1,4 +1,5 @@
-// legend
+// legend, adds a legend to a chart
+
 use crate::{
     common::{Chart, Data},
     xml::*,

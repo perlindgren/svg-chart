@@ -17,6 +17,14 @@ For Markdown integration Mermaid provides a set of simple to use diagrams. Good 
 
 ---
 
+Features:
+
+- Low-level access to `xml` tags, with support for attributes and styles.
+- Primitive SVG `draw` operations, `text`, `hover`, `line`, `rect`, `arc` and `pie`.
+- High-level charts `Bar` and `Pie`, with composable `axis` and `legend` chart embeddings. Embeddings use source data from `values`, `colors` and `labels` (as defined by the inner chart). Charts are positioned top down (from the outermost embedding, re-sizing inner charts recursively).
+
+---
+
 ## Use
 
 - `.svg` files are stored in the `xml` folder. It can be viewed directly in firefox or converted to other formats (e.g. `pdf`).
@@ -27,8 +35,8 @@ For Markdown integration Mermaid provides a set of simple to use diagrams. Good 
 
 The `svg` format captures models in a fairly simple `xml` format. While there exists numerous `xml` support crates for handling `dom` structures we provide a light weight `xlm.rs` library with a builder pattern, for creating and manipulating tags, attributes and styles.
 
-Drawing primitives are found in the `draw.rs` file, which adds `svg-chart` specific functionality.
+Drawing primitives are found in the `draw.rs` file, which adds `svg` specific functionality.
 
-Based on that, `bar_chart.rs`, `stacked_bar_chart.rs`, and `pie_chart.rs` can be used to generate diagrams accordingly (unit tests covers examples of use).
+Based on that, `bar`, and `pie` diagrams are generated accordingly (unit tests covers examples of use).
 
 The `pie` primitive uses clockwise direction starting from top. A mathematical `arc` is also available using polar coordinates, and counter clockwise draw direction in `svg` terminology.

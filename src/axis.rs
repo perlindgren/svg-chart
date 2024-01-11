@@ -1,4 +1,5 @@
-// legend
+// axis, adds horizontal and vertical axis
+
 use crate::{
     common::{Chart, Data, Values},
     xml::*,

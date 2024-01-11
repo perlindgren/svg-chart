@@ -1,4 +1,5 @@
 // bar chart
+
 use crate::{
     common::{Chart, Data, Values},
     xml::*,

@@ -1,4 +1,5 @@
-// common
+// common traits
+
 use crate::xml::Tag;
 use std::fmt::Display;
 

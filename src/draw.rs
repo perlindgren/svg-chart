@@ -1,4 +1,4 @@
-// primitive draw operations
+// draw, primitive operations
 
 use crate::xml::*;
 use std::f32::consts::PI;

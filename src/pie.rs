@@ -1,4 +1,4 @@
-// primitive draw operations
+// pie chart
 
 use crate::{
     common::{Chart, Data},
