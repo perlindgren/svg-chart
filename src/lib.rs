@@ -6,5 +6,5 @@ pub mod charts;
 pub mod common;
 pub mod draw;
 pub mod legend;
-pub mod pie_chart;
+pub mod pie;
 pub mod xml;

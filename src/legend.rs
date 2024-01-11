@@ -111,10 +111,31 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{bar::Bar, draw::test::test};
+    use crate::{bar::Bar, draw::test::test, pie::Pie};
 
     #[test]
-    fn legend() {
+    fn legend_pie() {
+        let legend = Legend::new(
+            Pie::new(
+                100,
+                100,
+                100,
+                vec![
+                    (0.1, "green", "Task1"),
+                    (0.15, "blue", "Task2"),
+                    (0.55, "yellow", "Task3"),
+                    (0.05, "red", "Task4"),
+                ],
+            ),
+            150,
+            20,
+        );
+        let svg = legend.build();
+        test(vec![svg], "xml/legend_pie.svg")
+    }
+
+    #[test]
+    fn legend_bar() {
         let legend = Legend::new(
             Bar::new(
                 200,
@@ -127,6 +148,6 @@ mod test {
             20,
         );
         let svg = legend.build();
-        test(vec![svg], "xml/legend.svg")
+        test(vec![svg], "xml/legend_bar.svg")
     }
 }
